@@ -52,7 +52,7 @@ user_freq_data = [[58.46523186569027, 51.77172636400796, 50.0, 50.0, 50.0, 50.0,
 
 
 # Open a json file
-with open('user_voltage_data.json') as f:    
+with open('user_voltage_data.json') as f:
     user_voltage_data = json.load(f)
 
 def parse_voltage_time():
@@ -78,19 +78,19 @@ parse_freq_time()
 
 # # print user_voltage_data['KIT1-0003'][2]
 # # def unixtime_to_readable():
-  
+
 # #   for user in user_to_sensor_id.keys():
 # #     user_voltage_time1 = []
 # #     for i in range(0, len(user_voltage_data[user][i])):
 # #       datetime.datetime.fromtimestamp(user_voltage_data[user][i])
 
-  
+
 
 
 
 # def plot_individual_voltage():
 #     fig, ax = plt.subplots()
-#     ax.plot_date(user_voltage_data['KIT1-0003'][2], user_voltage_data['KIT1-0003'][0], fmt='b-') # x = array of dates, y = array of numbers        
+#     ax.plot_date(user_voltage_data['KIT1-0003'][2], user_voltage_data['KIT1-0003'][0], fmt='b-') # x = array of dates, y = array of numbers
 
 #     fig.autofmt_xdate()
 
@@ -126,7 +126,7 @@ parse_freq_time()
 # #     ax.set_xlabel('DateTime', fontsize=8)
 # #     ax.set_ylabel('connec', fontsize=8)
 # #     ax.set_title('User ID ' + str(user_id), fontsize=8)
-# #     ax.set_ylim([-1,1]) 
+# #     ax.set_ylim([-1,1])
 
 # #   fig, axes = plt.subplots(nrows=rows, ncols=cols)
 # #   plt.title('connec Timeseries')
@@ -151,7 +151,7 @@ parse_freq_time()
 # # plot_connec_timeseries(2,2)
 # def plot_individual_connec():
 #     fig, ax = plt.subplots()
-#     ax.plot_date(connec_data.connec['KIT1-0003'][1], connec_data.connec['KIT1-0003'][0], fmt='b-') # x = array of dates, y = array of numbers        
+#     ax.plot_date(connec_data.connec['KIT1-0003'][1], connec_data.connec['KIT1-0003'][0], fmt='b-') # x = array of dates, y = array of numbers
 
 #     fig.autofmt_xdate()
 
@@ -169,7 +169,7 @@ parse_freq_time()
 
 
 def plot_combined():
-  
+
   plt.figure('KIT1-0003')
   plt.subplot(311)
   plt.plot(user_voltage_data['KIT1-0003'][2], user_voltage_data['KIT1-0003'][0],'b-')
@@ -184,6 +184,6 @@ def plot_combined():
   plt.show()
 
 plot_combined()
-    
+
 
 
