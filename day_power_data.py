@@ -45,6 +45,40 @@ user_location_by_port1_20 = {'KIT1-0016': (-0.26254, 32.42985),'KIT1-0010': (-0.
 #print(user_to_sensor_id)
 
 # Get daily power data for each user
-def 
+def power_timeseries():
+	user_power_data = {}
+	for user in user_to_sensor_id.keys():
+
+		internal_id = user_to_sensor_id[user]
+		user_power_data[user] =[]
+		user_power_time = []
+		user_power_mean = []
+		user_power_std = []
+
+		d1 = datetime.datetime(2015, 7, 9, 0, 0)
+		d2 = datetime.datetime(2016, 6, 30, 0, 0)
+
+		power_timeseries_curser = db.day.find( { "utctime":{ "$gte": d1,
+	      "$lte": d2}, "sensor": internal_id,
+	      "tag": "active_pwr" })
+	
+		for record in power_timeseries_curser:
+			time = record['utctime']
+			mean = record['mean']
+			std = record['std']
+			user_power_time.append(time.isoformat())
+			user_power_mean.append(mean)
+			user_power_std.append(std)
+
+		user_power_data[user] = [user_power_mean, user_power_std, user_power_time]
+
+	return user_power_data
+
+user_power_data = power_timeseries()
+
+print user_power_data
+
+with open('./user_power_data.json', 'w') as f :
+     json.dump(user_power_data, f, default=json_util.default)
 
 

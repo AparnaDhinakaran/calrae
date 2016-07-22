@@ -1,4 +1,5 @@
 from pymongo import MongoClient
+import pandas as pd
 import numpy as np
 import matplotlib
 # # Force matplotlib to not use any Xwindows backend.
@@ -17,8 +18,9 @@ from matplotlib.dates import DayLocator, HourLocator, DateFormatter, drange
 from numpy import arange
 import matplotlib.dates as mdates
 from decimal import Decimal
-
 from pprint import pprint
+from types import *
+
 
 import day_reliability_data as connec_data
 
@@ -55,6 +57,10 @@ user_freq_data = [[58.46523186569027, 51.77172636400796, 50.0, 50.0, 50.0, 50.0,
 with open('user_voltage_data.json') as f:
     user_voltage_data = json.load(f)
 
+with open('user_power_data.json') as f1:
+    user_power_data = json.load(f1)
+
+
 def parse_voltage_time():
   for user in user_to_sensor_id.keys():
     user_voltage_time1 = []
@@ -66,6 +72,18 @@ def parse_voltage_time():
 
 parse_voltage_time()
 
+def parse_power_time():
+  for user in user_to_sensor_id.keys():
+    user_power_time1 = []
+    for i in range(0, len(user_power_data[user][2])):
+      time1 = dateutil.parser.parse(user_power_data[user][2][i])
+      user_power_time1.append(time1)
+
+    user_power_data[user][2] = user_power_time1
+
+parse_power_time()
+
+
 def parse_freq_time():
   user_freq_time2 = []
   for i in range(0, len(user_freq_data[2])):
@@ -75,6 +93,8 @@ def parse_freq_time():
   user_freq_data[2] = user_freq_time2
 
 parse_freq_time()
+
+
 
 # # print user_voltage_data['KIT1-0003'][2]
 # # def unixtime_to_readable():
@@ -169,21 +189,33 @@ parse_freq_time()
 
 
 def plot_combined():
+  user = 'KIT1-0003'
 
-  plt.figure('KIT1-0003')
-  plt.subplot(311)
-  plt.plot(user_voltage_data['KIT1-0003'][2], user_voltage_data['KIT1-0003'][0],'b-')
+  plt.figure(user)
+  plt.subplot(411)
+  plt.plot(user_voltage_data[user][2], user_voltage_data[user][0],'b-')
   plt.ylabel('Voltage')
-  plt.subplot(312)
-  plt.plot(connec_data.connec['KIT1-0003'][1], connec_data.connec['KIT1-0003'][0],'r-')
+  plt.subplot(412)
+  plt.plot(connec_data.connec[user][1], connec_data.connec[user][0],'r-')
   plt.ylabel('Connection')
   plt.ylim(-2, 2)
-  plt.subplot(313)
+  plt.subplot(413)
   plt.plot(user_freq_data[2],user_freq_data[0], 'b-')
   plt.ylabel('system frequency')
+  plt.subplot(414)
+  plt.plot(user_power_data[user][2],user_power_data[user][0], 'b-')
+  plt.ylabel('power')
   plt.show()
 
 plot_combined()
 
+a = np.array(user_voltage_data['KIT1-0003'][0],dtype=float)
+b = np.array(connec_data.connec['KIT1-0003'][0],dtype=float)
+c = np.array(user_power_data['KIT1-0003'][0],dtype=float)
+d = np.array(user_freq_data[0][0:270], dtype=float)
+e = np.column_stack((a,b,c,d))
+# print(np.shape(c))
 
-
+frame = pd.DataFrame(e, columns = ['vol', 'connec', 'pwr', 'sys_freq'])
+print frame.corr()
+# frame['a'].corr(frame['b'])
