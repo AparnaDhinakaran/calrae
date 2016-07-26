@@ -189,11 +189,33 @@ distance_voltage()
 
 
 def cluster_setup():
+  shedLat = -0.262729177
+  shedLon = 32.42977985
+  X = [] # 16 users * 22 features
+  user_cluster = {}
+  users_cursor = customers.find()
+  for user in user_data.keys():
+      avg_voltage = np.mean(user_data[user][1])
+      avg_current = np.mean(user_data[user][4])
+      avg_power = np.mean(user_data[user][7])
+      user_cluster[user] = [user, avg_voltage, avg_current, avg_power]
+  for user in user_location.keys():
+      user_loc = user_location[user]
+      user_distance = vincenty(shed_location, user_loc).meters
+      user_cluster[user].append(user_distance)
+  for record in users_cursor:
+    user_cluster[record['internal_id'].encode('ascii')] = (record['Latitude'], record['Longitude'])
+    user_to_sensor[record['internal_id'].encode('ascii')] = record['monitoring_device_id'].encode('ascii')
+  ast.literal_eval(json.dumps(user_to_sensor))
 
-  #X = [user_num, average_daily_voltage, average_daily_current, average_daily_power, distance, business_type, revenue, num_lights, num_V, num_computer, num_fans, num_speakers, num_signs, num_bar, num_game machine, pays_now, expansion, want_light, want_fridge, want_tv, want computer, want_freezer]
 
 
+
+  #X = [user_num, average_daily_voltage, average_daily_current, average_daily_power, distance, business_type, revenue, num_lights, num_V, num_computer, num_fans, num_speakers, num_signs, num_bar, num_game machine, pays_now]
   return X
+
+X = cluster_setup()
+print(X)
 
 def cluster_users(X):
 
@@ -270,5 +292,4 @@ ax.legend(handles=[patch1, patch2, patch3, patch4])
 ax.set_title('Kitoba User Analysis')
 
 plt.show()
-
 
