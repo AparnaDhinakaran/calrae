@@ -11,6 +11,16 @@ from dateutil.rrule import rrule, DAILY
 from matplotlib.dates import DayLocator, HourLocator, DateFormatter, drange
 from numpy import arange
 import matplotlib.dates as mdates
+from mpl_toolkits.mplot3d import Axes3D
+from sklearn.cluster import KMeans
+from scipy.cluster.vq import kmeans2
+from scipy.cluster.vq import kmeans
+from scipy.cluster.vq import kmeans,vq, whiten
+import matplotlib.patches as mpatches
+from sklearn.manifold import TSNE
+from matplotlib import colors
+from sklearn.decomposition import PCA
+
 
 client = MongoClient()
 db = client['stellar-monitor']
@@ -176,4 +186,89 @@ def distance_voltage():
   plt.show()
 
 distance_voltage()
+
+
+def cluster_setup():
+
+  #X = [user_num, average_daily_voltage, average_daily_current, average_daily_power, distance, business_type, revenue, num_lights, num_V, num_computer, num_fans, num_speakers, num_signs, num_bar, num_game machine, pays_now, expansion, want_light, want_fridge, want_tv, want computer, want_freezer]
+
+
+  return X
+
+def cluster_users(X):
+
+TRIMMED_X = X[:, 1 : len(X[0]) - 1]
+
+"""
+Reduction Mode: 0 - TSNE, 1 - PCA
+"""
+
+REDUCTION_MODE = 1
+
+if REDUCTION_MODE == 0 :
+  model = TSNE(n_components=2, random_state=0)
+  np.set_printoptions(suppress=True)
+  reduced_X = model.fit_transform(TRIMMED_X)
+else:
+  pca = PCA(n_components=2)
+  reduced_X = pca.fit_transform(X)
+
+x = []
+y = []
+for i in range(len(reduced_X)):
+  x.append(reduced_X[i][0])
+  y.append(reduced_X[i][1])
+
+user_id = []
+weighted_coeffients = []
+for i in range(len(X)):
+  user = X[i]
+  user_id.append(user[0])
+  coefficients = []
+  for j in range(1,len(invertor)-1):
+    coefficients.append(abs(invertor[j])/summation)
+  weighted_coeffients.append(coefficients)
+
+
+KMeansCoefficients = np.array(coefficients)
+print(KMeansCoefficients.shape)
+
+centroids, distance = kmeans(KMeansCoefficients, 2)
+print ("Centroids for KMeansCoefficients", centroids)
+labels, distance = vq(KMeansCoefficients,centroids)
+colors = ['red','green','blue','purple']
+color_list = []
+for i in range(len(labels)):
+  if labels[i]== 0:
+    color_list.append('r')
+  elif labels[i] == 1:
+    color_list.append('g')
+  elif labels[i] == 2:
+    color_list.append('b')
+  elif labels[i] == 3:
+    color_list.append('purple')
+
+fig = plt.figure()
+ax = fig.add_subplot(111)
+ax.scatter(x, y,  c=color_list, label=user_id)
+
+annotate_labels = ['{0}'.format(i) for i in user_id]
+for annotate_label, x_point, y_point in zip(annotate_labels, x, y):
+    ax.annotate(
+        annotate_label,
+        xy = (x_point, y_point), xytext = (-1, 1),
+        textcoords = 'offset points', ha = 'right', va = 'bottom',
+        bbox = dict(boxstyle = 'round,pad=0.8', fc = 'yellow', alpha = 0.05),
+        )
+
+patch1 = mpatches.Patch(color='red', label='Group 1')
+patch2 = mpatches.Patch(color='green', label='Group 2')
+patch3 = mpatches.Patch(color='blue', label='Group 3')
+patch4 = mpatches.Patch(color='purple', label='Group 4')
+ax.legend(handles=[patch1, patch2, patch3, patch4])
+
+ax.set_title('Kitoba User Analysis')
+
+plt.show()
+
 
