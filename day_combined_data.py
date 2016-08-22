@@ -186,32 +186,31 @@ parse_freq_time()
 #     plt.show()
 
 # # plot_individual_connec()
-
+customer = 'KIT1-0017'
 
 def plot_combined():
-  user = 'KIT1-0003'
 
-  plt.figure(user)
+  plt.figure(customer)
   plt.subplot(411)
-  plt.plot(user_voltage_data[user][2], user_voltage_data[user][0],'b-')
+  plt.plot(user_voltage_data[customer][2], user_voltage_data[customer][0],'b-')
   plt.ylabel('Voltage')
   plt.subplot(412)
-  plt.plot(connec_data.connec[user][1], connec_data.connec[user][0],'r-')
+  plt.plot(connec_data.connec[customer][1], connec_data.connec[customer][0],'r-')
   plt.ylabel('Connection')
   plt.ylim(-2, 2)
   plt.subplot(413)
   plt.plot(user_freq_data[2],user_freq_data[0], 'b-')
   plt.ylabel('system frequency')
   plt.subplot(414)
-  plt.plot(user_power_data[user][2],user_power_data[user][0], 'b-')
+  plt.plot(user_power_data[customer][2],user_power_data[customer][0], 'b-')
   plt.ylabel('power')
   plt.show()
 
 plot_combined()
 
-a = np.array(user_voltage_data['KIT1-0003'][0],dtype=float)
-b = np.array(connec_data.connec['KIT1-0003'][0],dtype=float)
-c = np.array(user_power_data['KIT1-0003'][0],dtype=float)
+a = np.array(user_voltage_data[customer][0],dtype=float)
+b = np.array(connec_data.connec[customer][0],dtype=float)
+c = np.array(user_power_data[customer][0],dtype=float)
 d = np.array(user_freq_data[0][0:270], dtype=float)
 e = np.column_stack((a,b,c,d))
 # print(np.shape(c))
