@@ -200,7 +200,7 @@ parse_freq_time()
 #     plt.show()
 
 # # plot_individual_connec()
-customer = 'KIT1-0017'
+customer = 'KIT1-0003'
 
 def plot_combined():
 
@@ -222,13 +222,19 @@ def plot_combined():
   # plt.savefig('/Users/zfj/Desktop/calrae/Kitoba Plots/day_combined_data_individual_users/' + customer + '.png')
 plot_combined()
 
-a = np.array(user_voltage_data[customer][0],dtype=float)
-b = np.array(connec_data.connec[customer][0],dtype=float)
-c = np.array(user_power_data[customer][0],dtype=float)
-d = np.array(user_current_data[customer][0],dtype=float)
-e = np.column_stack((a,b,c,d))
-# print(np.shape(c))
 
-frame = pd.DataFrame(e, columns = ['vol', 'connec', 'pwr', 'current'])
-print frame.corr()
+# correlation coefficient matrix for each user
+
+# for user in user_to_sensor_id.keys():
+
+#   a = np.array(user_voltage_data[user][0],dtype=float)
+#   b = np.array(connec_data.connec[user][0],dtype=float)
+#   c = np.array(user_power_data[user][0],dtype=float)
+#   d = np.array(user_current_data[user][0],dtype=float)
+#   e = np.column_stack((a,b,c,d))
+#   # print(np.shape(c))
+
+#   frame = pd.DataFrame(e, columns = ['vol', 'connec', 'pwr', 'current'])
+#   print user
+#   print frame.corr()
 # frame['a'].corr(frame['b'])
