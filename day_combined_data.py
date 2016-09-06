@@ -218,8 +218,8 @@ def plot_combined():
   plt.subplot(414)
   plt.plot(user_power_data[customer][2],user_power_data[customer][0], 'b-')
   plt.ylabel('Power')
-  plt.show()
-  # plt.savefig('/Users/zfj/Desktop/calrae/Kitoba Plots/day_combined_data_individual_users/' + customer + '.png')
+  # plt.show()
+  plt.savefig('/Users/zfj/Desktop/calrae/Kitoba Plots/day_combined_data_individual_users/' + customer + '.png')
 plot_combined()
 
 
