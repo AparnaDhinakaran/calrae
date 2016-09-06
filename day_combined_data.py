@@ -60,6 +60,9 @@ with open('user_voltage_data.json') as f:
 with open('user_power_data.json') as f1:
     user_power_data = json.load(f1)
 
+with open('user_current_data.json') as f2:
+    user_current_data = json.load(f2)
+
 
 def parse_voltage_time():
   for user in user_to_sensor_id.keys():
@@ -82,6 +85,17 @@ def parse_power_time():
     user_power_data[user][2] = user_power_time1
 
 parse_power_time()
+
+def parse_current_time():
+  for user in user_to_sensor_id.keys():
+    user_current_time1 = []
+    for i in range(0, len(user_current_data[user][2])):
+      time1 = dateutil.parser.parse(user_current_data[user][2][i])
+      user_current_time1.append(time1)
+
+    user_current_data[user][2] = user_current_time1
+
+parse_current_time()
 
 
 def parse_freq_time():
@@ -199,22 +213,22 @@ def plot_combined():
   plt.ylabel('Connection')
   plt.ylim(-2, 2)
   plt.subplot(413)
-  plt.plot(user_freq_data[2],user_freq_data[0], 'b-')
-  plt.ylabel('system frequency')
+  plt.plot(user_current_data[customer][2],user_current_data[customer][0], 'b-')
+  plt.ylabel('Current')
   plt.subplot(414)
   plt.plot(user_power_data[customer][2],user_power_data[customer][0], 'b-')
-  plt.ylabel('power')
+  plt.ylabel('Power')
   plt.show()
-
+  # plt.savefig('/Users/zfj/Desktop/calrae/Kitoba Plots/day_combined_data_individual_users/' + customer + '.png')
 plot_combined()
 
 a = np.array(user_voltage_data[customer][0],dtype=float)
 b = np.array(connec_data.connec[customer][0],dtype=float)
 c = np.array(user_power_data[customer][0],dtype=float)
-d = np.array(user_freq_data[0][0:270], dtype=float)
+d = np.array(user_current_data[customer][0],dtype=float)
 e = np.column_stack((a,b,c,d))
 # print(np.shape(c))
 
-frame = pd.DataFrame(e, columns = ['vol', 'connec', 'pwr', 'sys_freq'])
+frame = pd.DataFrame(e, columns = ['vol', 'connec', 'pwr', 'current'])
 print frame.corr()
 # frame['a'].corr(frame['b'])
